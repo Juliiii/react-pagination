@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 
 export default class PaginationItems extends Component {
     static defaultProps = {
-        hoverIndex: 1
+        hoverIndex: -1
     }
 
 
@@ -13,31 +14,43 @@ export default class PaginationItems extends Component {
             [PropTypes.number.isRequired, PropTypes.string.isRequired]
         ),
         hoverIndex: PropTypes.number.isRequired,
-        onClick: PropTypes.func.isRequired
-        // onMouseOver: PropTypes.func.isRequired
+        currentIndex: PropTypes.number.isRequired,
+        onClick: PropTypes.func.isRequired,
+        onMouseOver: PropTypes.func.isRequired,
+        onMouseLeave: PropTypes.func.isRequired
     }
 
     onClick (e) {
         if (this.props.page !== '...' && this.props.onClick) {
+            console.log('111');
             this.props.onClick(e);
         }
     }
 
     onMouseOver (e) {
-        console.log(e.target.innerText);
+        if (this.props.onMouseOver) {
+            this.props.onMouseOver(e);
+        }
     }
 
     onMouseLeave (e) {
-
+        if (this.props.onMouseLeave) {
+            this.props.onMouseLeave(e);
+        }
     }
 
     render () {
-        const page = this.props.page;
+        const { page, hoverIndex, currentIndex } = this.props;
+        const classes = cx({
+            'list-items-1': hoverIndex === page || currentIndex === page,
+            'list-items': page !== '...',
+            'ellipsis': page === '...'
+        });
         return (
-            <li className= {page !== '...' ? 'list-items' : 'ellipsis'} 
+            <li className= {classes} 
                 onClick={this.onClick.bind(this)} 
                 onMouseOver={this.onMouseOver.bind(this)}
-                onMouseLeave={() => console.log(1)}>{page}</li>
+                onMouseLeave={this.onMouseLeave.bind(this)}>{page}</li>
         );
     }
 };
