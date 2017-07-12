@@ -22,7 +22,6 @@ export default class PaginationItems extends Component {
 
     onClick (e) {
         if (this.props.page !== '...' && this.props.onClick) {
-            console.log('111');
             this.props.onClick(e);
         }
     }
