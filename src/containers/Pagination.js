@@ -7,7 +7,7 @@ export default class Pagination extends Component {
     static defaultProps = {
         pageSize: 10,
         current: -1,
-        total: 101,
+        total: 60,
         pageChange: (index) => console.log(index)
     }
 
@@ -27,7 +27,8 @@ export default class Pagination extends Component {
     constructor () {
         super();
         this.state = {
-            hoverIndex: -1
+            hoverIndex: -1,
+            pagesLength: 0
         }
     }
 
@@ -37,8 +38,10 @@ export default class Pagination extends Component {
 
     _getPages () {
         const { total, pageSize } = this.props;
-        const length = Math.floor(total / pageSize) + 1;
-        let arr = [];
+        const length = Math.ceil(total / pageSize);
+        this.setState({
+            pagesLength: length
+        });
         if (length < 6) {
             this.setState({
                 pages: new Array(length).fill(0).map((item, i) => i + 1)
@@ -48,19 +51,24 @@ export default class Pagination extends Component {
                 pages: [...(new Array(4).fill(0).map((item, i) => i + 1)), '...', length]
             })
         }
+
+        this.props.current >= 5 && this._getPages();
     }
 
-    _pageChange (current) {
+    _pageChange () {
 
     }
 
 
     onClick (e) {
-        // this.props.pageChange && this.props.pageChange(e);
         const Text = e.target.innerText;
         switch (Text) {
             case '上一页':
-                this.props.pageChange(this.props)
+                this.props.pageChange(this.props.current - 1); break;
+            case '下一页':
+                this.props.pageChange(this.props.current + 1); break;
+            default:
+                this.props.pageChange(parseInt(Text, 10)); break;
         }
 
     }
@@ -90,22 +98,28 @@ export default class Pagination extends Component {
             'list-items': true,
             'list-items-1': this.state.hoverIndex === '下一页'
         });
+
+        const pre = <li className={preClasses} 
+                    onMouseOver={this.onMouseOver.bind(this)}
+                    onMouseLeave={this.onMouseLeave.bind(this)}
+                    onClick={this.onClick.bind(this)}>上一页</li>;
+        const next = <li className={nextClasses} 
+                    onMouseOver={this.onMouseOver.bind(this)}
+                    onMouseLeave={this.onMouseLeave.bind(this)}
+                    onClick={this.onClick.bind(this)}>下一页</li>;
+
         return (
             <ul className="list">
-                <li className={preClasses} 
-                    onMouseOver={this.onMouseOver.bind(this)}
-                    onMouseLeave={this.onMouseLeave.bind(this)}>上一页</li>
-                {this.state.pages.map((page, index) => 
+                { this.props.current === 1 ? null : pre}
+                { this.state.pages.map((page, index) => 
                     <PaginationItems page={page} 
                                     key={index}
                                     hoverIndex={this.state.hoverIndex}
                                     currentIndex={this.props.current}
                                     onClick={this.onClick.bind(this)} 
                                     onMouseOver={this.onMouseOver.bind(this)}
-                                    onMouseLeave={this.onMouseLeave.bind(this)}/>)}
-                <li className={nextClasses} 
-                    onMouseOver={this.onMouseOver.bind(this)}
-                    onMouseLeave={this.onMouseLeave.bind(this)}>下一页</li>
+                                    onMouseLeave={this.onMouseLeave.bind(this)}/>) }
+                { this.props.current === this.state.pagesLength ? null : next }
             </ul>
         );
     }

@@ -13,7 +13,9 @@ export default class PaginationItems extends Component {
         page: PropTypes.oneOfType(
             [PropTypes.number.isRequired, PropTypes.string.isRequired]
         ),
-        hoverIndex: PropTypes.number.isRequired,
+        hoverIndex: PropTypes.oneOfType(
+            [PropTypes.number.isRequired, PropTypes.string.isRequired]
+        ),
         currentIndex: PropTypes.number.isRequired,
         onClick: PropTypes.func.isRequired,
         onMouseOver: PropTypes.func.isRequired,
