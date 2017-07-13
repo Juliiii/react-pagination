@@ -44,15 +44,10 @@ export default class Pagination extends Component {
 
     _getPages (props) {
         const { total, pageSize, current } = props;
-        const { pagesLength } = this.state;
         const length = Math.ceil(total / pageSize);
         this.setState({
             pagesLength: length
         });
-        this._getPagesHandle(current, length);
-    }
-
-    _getPagesHandle (current, length) {
         if (current <= 7) {
             if (length <= 9) {
                 this.setState({
@@ -63,20 +58,26 @@ export default class Pagination extends Component {
                     pages: [...(new Array(7).fill(0).map((item, i) => i + 1)), '...', length]
                 })
             }
-        } else if (current > pagesLength - 7) {
+        } else if (current > length - 7) {
             this.setState({
-                pages: [1, '...', ...(new Array(7).fill(0).map((item, i) => pagesLength + i - 6))]
+                pages: [1, '...', ...(new Array(7).fill(0).map((item, i) => length + i - 6))]
             });            
         } else {
             this.setState({
-                pages: [1, '...', ...(new Array(5).fill(0).map((item, i) => current + i - 2)), '...', pagesLength]
+                pages: [1, '...', ...(new Array(5).fill(0).map((item, i) => current + i - 2)), '...', length]
             })            
         }
     }
 
-    onPageSizesChange (newSize) {
-         const { total, current } = props;
-         const length = Math.ceil(total / newSize);
+    onPageSizesChange ({target: {value}}) {
+         let { total, current } = this.props;
+         value = parseInt(value, 10);
+         const length = Math.ceil(total / value);
+         this.setState({
+             pagesLength: length
+         });
+         if (current > length) current = length;
+         this.props.pageSizeChange(current, value);
     }
 
     onClick (e) {

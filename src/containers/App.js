@@ -24,11 +24,18 @@ class App extends Component {
         });
     }
 
+    pageSizeChange (current, newPageSize) {
+        this.setState({
+            current,
+            pageSize: newPageSize
+        });
+    }
 
     render () {
         const props = {
             ...this.state,
-            pageChange: this.pageChange.bind(this)
+            pageChange: this.pageChange.bind(this),
+            pageSizeChange: this.pageSizeChange.bind(this)
         }
 
 
