@@ -33,44 +33,37 @@ export default class Pagination extends Component {
     }
 
     componentWillMount () {
-        this._getPages();
+        this._getPages(this.props);
     }
 
     componentWillReceiveProps (nextProps) {
         this._getPages(nextProps);
     }
 
-    _getPages (nextProps) {
-        const { total, pageSize } = this.props;
+    _getPages (props) {
+        const { total, pageSize, current } = props;
         const length = Math.ceil(total / pageSize);
         this.setState({
             pagesLength: length
         });
-        if (length < 6) {
-            this.setState({
-                pages: new Array(length).fill(0).map((item, i) => i + 1)
-            })
-        } else {
-            this.setState({
-                pages: [...(new Array(4).fill(0).map((item, i) => i + 1)), '...', length]
-            })
-        }
-
-        this._pageChange(nextProps ? nextProps: this.props);
-    }
-
-    _pageChange ({ current }) {
-        // const { current } = this.props;
-        const { pagesLength } = this.state;
-        if (current < 5) return;
-        if (current > pagesLength - 4) {
+        if (current < 5) {
+            if (length < 6) {
+                this.setState({
+                    pages: new Array(length).fill(0).map((item, i) => i + 1)
+                })
+            } else {
+                this.setState({
+                    pages: [...(new Array(4).fill(0).map((item, i) => i + 1)), '...', length]
+                })
+            }
+        } else if (current > pagesLength - 4) {
             this.setState({
                 pages: [1, '...', ...(new Array(4).fill(0).map((item, i) => pagesLength + i - 3))]
-            });
+            });            
         } else {
             this.setState({
                 pages: [1, '...', ...(new Array(5).fill(0).map((item, i) => current + i - 2)), '...', pagesLength]
-            })
+            })            
         }
     }
 
