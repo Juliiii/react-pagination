@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import PaginationItems from '../components/PaginationItems';
+import PaginationItems from './PaginationItems';
 
 export default class Pagination extends Component {
     static defaultProps = {
@@ -36,7 +36,11 @@ export default class Pagination extends Component {
         this._getPages();
     }
 
-    _getPages () {
+    componentWillReceiveProps (nextProps) {
+        this._getPages(nextProps);
+    }
+
+    _getPages (nextProps) {
         const { total, pageSize } = this.props;
         const length = Math.ceil(total / pageSize);
         this.setState({
@@ -52,11 +56,22 @@ export default class Pagination extends Component {
             })
         }
 
-        this.props.current >= 5 && this._getPages();
+        this._pageChange(nextProps ? nextProps: this.props);
     }
 
-    _pageChange () {
-
+    _pageChange ({ current }) {
+        // const { current } = this.props;
+        const { pagesLength } = this.state;
+        if (current < 5) return;
+        if (current > pagesLength - 4) {
+            this.setState({
+                pages: [1, '...', ...(new Array(4).fill(0).map((item, i) => pagesLength + i - 3))]
+            });
+        } else {
+            this.setState({
+                pages: [1, '...', ...(new Array(5).fill(0).map((item, i) => current + i - 2)), '...', pagesLength]
+            })
+        }
     }
 
 
@@ -64,11 +79,14 @@ export default class Pagination extends Component {
         const Text = e.target.innerText;
         switch (Text) {
             case '上一页':
-                this.props.pageChange(this.props.current - 1); break;
+                this.props.pageChange(this.props.current - 1);
+                break;
             case '下一页':
-                this.props.pageChange(this.props.current + 1); break;
+                this.props.pageChange(this.props.current + 1); 
+                break;
             default:
-                this.props.pageChange(parseInt(Text, 10)); break;
+                this.props.pageChange(parseInt(Text, 10));
+                break;
         }
 
     }
