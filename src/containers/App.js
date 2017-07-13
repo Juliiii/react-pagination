@@ -18,9 +18,9 @@ class App extends Component {
         }
     }
 
-    pageChange (newIndex) {
+    pageChange (current, newPageSize) {
         this.setState({
-            current: newIndex
+            current
         });
     }
 

@@ -8,22 +8,22 @@ import PageSizeSelect from './PageSizeSelect';
 
 export default class Pagination extends Component {
     static defaultProps = {
-        pageSize: 10,
-        current: -1,
-        total: 60,
-        jumb: false,
-        pageSizes: [10, 20, 30],
-        pageChange: (index) => console.log(index)
+        pageSize:        10,
+        total:           0,
+        showQuickJumper: true,
+        showSizeChanger: true,
+        pageSizes:       [10, 20, 30, 40]
     }
 
-    static propTypes = {
-        pageChange: PropTypes.func.isRequired,
-        pageSizeChange: PropTypes.func,
-        current: PropTypes.number.isRequired,
-        total: PropTypes.number.isRequired,
-        pageSize: PropTypes.number,
-        pageSizes: PropTypes.arrayOf(PropTypes.number),
-        jumb: PropTypes.bool
+    static propTypes   = {
+        pageChange:      PropTypes.func.isRequired,
+        pageSizeChange:  PropTypes.func,
+        current:         PropTypes.number.isRequired,
+        total:           PropTypes.number.isRequired,
+        pageSize:        PropTypes.number,
+        pageSizes:       PropTypes.arrayOf(PropTypes.number),
+        showQuickJumper: PropTypes.bool,
+        showSizeChanger: PropTypes.bool
     }
 
     constructor () {
@@ -114,7 +114,7 @@ export default class Pagination extends Component {
             let { pagesLength } = this.state;
             const newIndex = _value > pagesLength ? pagesLength
                                                   : _value < 1 ? 1 : _value;
-            this.props.pageChange(newIndex);
+            this.props.pageChange(newIndex, this.props.pageSize);
         }
     }
 
@@ -145,7 +145,10 @@ export default class Pagination extends Component {
 
         return (
             <div className="wrapper">
-                <PageSizeSelect pageSizes={this.props.pageSizes} pageSizesChange={this.onPageSizesChange.bind(this)}/>
+                {this.props.showSizeChanger ? <PageSizeSelect 
+                                            pageSizes={this.props.pageSizes} 
+                                            pageSizesChange={this.onPageSizesChange.bind(this)}/>
+                                            : null}
                 <ul className="list">
                     { this.props.current === 1 ? null : pre}
                     { this.state.pages.map((page, index) => 
@@ -158,9 +161,10 @@ export default class Pagination extends Component {
                                         onMouseLeave={this.onMouseLeave.bind(this)}/>) }
                     { this.props.current === this.state.pagesLength ? null : next }
                 </ul>
-                {this.props.jumb ? <SkipInput pagesLength={this.state.pagesLength}
-                           total={this.props.total}
-                           onKeyDown={this.onKeyDown.bind(this)}/> : null}
+                {this.props.showQuickJumper ? <SkipInput pagesLength={this.state.pagesLength}
+                                                         total={this.props.total}
+                                                         onKeyDown={this.onKeyDown.bind(this)}/> 
+                                            : null}
             </div>
         );
     }

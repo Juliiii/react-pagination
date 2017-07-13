@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 export default class PaginationItems extends Component {
@@ -9,7 +9,7 @@ export default class PaginationItems extends Component {
 
 
 
-    static propTypes = {
+    /*static propTypes = {
         page: PropTypes.oneOfType(
             [PropTypes.number.isRequired, PropTypes.string.isRequired]
         ),
@@ -20,7 +20,7 @@ export default class PaginationItems extends Component {
         onClick: PropTypes.func.isRequired,
         onMouseOver: PropTypes.func.isRequired,
         onMouseLeave: PropTypes.func.isRequired
-    }
+    }*/
 
     onClick (e) {
         if (this.props.page !== '...' && this.props.onClick) {
