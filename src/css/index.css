@@ -23,7 +23,7 @@ body {
   text-align: center;
   margin: 0 2px;
   vertical-align: top;
-  box-sizing: border-box;
+  box-sizing: content-box;
 }
 
 .list-items-1 {

@@ -42,23 +42,24 @@ export default class Pagination extends Component {
 
     _getPages (props) {
         const { total, pageSize, current } = props;
+        const { pagesLength } = this.state;
         const length = Math.ceil(total / pageSize);
         this.setState({
             pagesLength: length
         });
-        if (current < 5) {
-            if (length < 6) {
+        if (current <= 7) {
+            if (length <= 9) {
                 this.setState({
                     pages: new Array(length).fill(0).map((item, i) => i + 1)
                 })
             } else {
                 this.setState({
-                    pages: [...(new Array(4).fill(0).map((item, i) => i + 1)), '...', length]
+                    pages: [...(new Array(7).fill(0).map((item, i) => i + 1)), '...', length]
                 })
             }
-        } else if (current > pagesLength - 4) {
+        } else if (current > pagesLength - 7) {
             this.setState({
-                pages: [1, '...', ...(new Array(4).fill(0).map((item, i) => pagesLength + i - 3))]
+                pages: [1, '...', ...(new Array(7).fill(0).map((item, i) => pagesLength + i - 6))]
             });            
         } else {
             this.setState({

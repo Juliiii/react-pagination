@@ -14,7 +14,7 @@ class App extends Component {
         super();
         this.state = {
             current: 2,
-            total: 121
+            total: 1515
         }
     }
 
