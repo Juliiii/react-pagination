@@ -2,27 +2,26 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import PaginationItems from './PaginationItems';
+import SkipInput from './SkipInput';
 
 export default class Pagination extends Component {
     static defaultProps = {
         pageSize: 10,
         current: -1,
         total: 60,
+        skip: false,
         pageChange: (index) => console.log(index)
     }
-
-
 
     static propTypes = {
         pageChange: PropTypes.func.isRequired,
         pageSizeChange: PropTypes.func,
         current: PropTypes.number.isRequired,
         total: PropTypes.number.isRequired,
-        pageSize: PropTypes.number
+        pageSize: PropTypes.number,
+        pageSizes: PropTypes.arrayOf(PropTypes.number),
+        skip: PropTypes.bool
     }
-
-
-
 
     constructor () {
         super();
@@ -95,6 +94,18 @@ export default class Pagination extends Component {
         });
     }
 
+    onKeyDown (keyCode, value, input) {
+        if (keyCode === 13) {
+            input.value = '';
+            if (isNaN(value)) return;
+            let _value = parseInt(value, 10);
+            let { pagesLength } = this.state;
+            const newIndex = _value > pagesLength ? pagesLength
+                                                  : _value < 1 ? 1 : _value;
+            this.props.pageChange(newIndex);
+        }
+    }
+
     onMouseLeave (e) {
         this.setState({
             hoverIndex: -1
@@ -121,18 +132,23 @@ export default class Pagination extends Component {
                     onClick={this.onClick.bind(this)}>下一页</li>;
 
         return (
-            <ul className="list">
-                { this.props.current === 1 ? null : pre}
-                { this.state.pages.map((page, index) => 
-                    <PaginationItems page={page} 
-                                    key={index}
-                                    hoverIndex={this.state.hoverIndex}
-                                    currentIndex={this.props.current}
-                                    onClick={this.onClick.bind(this)} 
-                                    onMouseOver={this.onMouseOver.bind(this)}
-                                    onMouseLeave={this.onMouseLeave.bind(this)}/>) }
-                { this.props.current === this.state.pagesLength ? null : next }
-            </ul>
+            <div className="wrapper">
+                <ul className="list">
+                    { this.props.current === 1 ? null : pre}
+                    { this.state.pages.map((page, index) => 
+                        <PaginationItems page={page} 
+                                        key={index}
+                                        hoverIndex={this.state.hoverIndex}
+                                        currentIndex={this.props.current}
+                                        onClick={this.onClick.bind(this)} 
+                                        onMouseOver={this.onMouseOver.bind(this)}
+                                        onMouseLeave={this.onMouseLeave.bind(this)}/>) }
+                    { this.props.current === this.state.pagesLength ? null : next }
+                </ul>
+                {this.props.skip ? <SkipInput pagesLength={this.state.pagesLength}
+                           total={this.props.total}
+                           onKeyDown={this.onKeyDown.bind(this)}/> : null}
+            </div>
         );
     }
 }
