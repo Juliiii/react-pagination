@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import PaginationItems from './PaginationItems';
 import SkipInput from './SkipInput';
+import PageSizeSelect from './PageSizeSelect';
+
 
 export default class Pagination extends Component {
     static defaultProps = {
         pageSize: 10,
         current: -1,
         total: 60,
-        skip: false,
+        jumb: false,
+        pageSizes: [10, 20, 30],
         pageChange: (index) => console.log(index)
     }
 
@@ -20,7 +23,7 @@ export default class Pagination extends Component {
         total: PropTypes.number.isRequired,
         pageSize: PropTypes.number,
         pageSizes: PropTypes.arrayOf(PropTypes.number),
-        skip: PropTypes.bool
+        jumb: PropTypes.bool
     }
 
     constructor () {
@@ -46,6 +49,10 @@ export default class Pagination extends Component {
         this.setState({
             pagesLength: length
         });
+        this._getPagesHandle(current, length);
+    }
+
+    _getPagesHandle (current, length) {
         if (current <= 7) {
             if (length <= 9) {
                 this.setState({
@@ -67,6 +74,10 @@ export default class Pagination extends Component {
         }
     }
 
+    onPageSizesChange (newSize) {
+         const { total, current } = props;
+         const length = Math.ceil(total / newSize);
+    }
 
     onClick (e) {
         const Text = e.target.innerText;
@@ -133,6 +144,7 @@ export default class Pagination extends Component {
 
         return (
             <div className="wrapper">
+                <PageSizeSelect pageSizes={this.props.pageSizes} pageSizesChange={this.onPageSizesChange.bind(this)}/>
                 <ul className="list">
                     { this.props.current === 1 ? null : pre}
                     { this.state.pages.map((page, index) => 
@@ -145,7 +157,7 @@ export default class Pagination extends Component {
                                         onMouseLeave={this.onMouseLeave.bind(this)}/>) }
                     { this.props.current === this.state.pagesLength ? null : next }
                 </ul>
-                {this.props.skip ? <SkipInput pagesLength={this.state.pagesLength}
+                {this.props.jumb ? <SkipInput pagesLength={this.state.pagesLength}
                            total={this.props.total}
                            onKeyDown={this.onKeyDown.bind(this)}/> : null}
             </div>
