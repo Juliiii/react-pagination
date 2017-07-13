@@ -1,7 +1,9 @@
 {
-  "name": "react-pagination",
+  "name": "react-bilibilistyle-pagination",
   "version": "0.1.0",
-  "private": true,
+  "author": "Juli <zhulf0506@163.com>",
+  "private": false,
+  "main": "index",
   "dependencies": {
     "classnames": "^2.2.5",
     "prop-types": "^15.5.10",
