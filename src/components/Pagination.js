@@ -8,8 +8,9 @@ import PageSizeSelect from './PageSizeSelect';
 
 export default class Pagination extends Component {
     static defaultProps = {
+        current:         1,
         pageSize:        10,
-        total:           0,
+        total:           100,
         showQuickJumper: true,
         showSizeChanger: true,
         pageSizes:       [10, 20, 30, 40]
