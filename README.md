@@ -1,5 +1,6 @@
 ## Introduction
----
+--
+
 经常混迹B站，大二上期末的时候做web2.0课程设计大作业时，需要用到分页组件。当时模仿B站的分页写了一个Angular的版本，最近在学习React, 故将其写成一个react组件。
 
 ## Usage
@@ -15,7 +16,8 @@ import Pagination from 'react-bilibilistyle-pagination'
 import 'react-bilibilistyle-pagination/dist/main.css';
 ```
 ## Props
----
+--
+
 参数 | 说明 | 类型 | 必要性 |默认值
 ------------ | ------------ | ------------ | ------------ | ----------|
 current | 当前页数 | number | 必要 | 1 |
@@ -28,7 +30,7 @@ pageChange | 页码改变的回调，参数为新的页数 | func | 必要 | - |
 pageSizeChange | 每页页数改变时的回调，接收当前页数和新的每条页数作为参数 | func | 不必要 | - |
 
 ## Example
----
+--
 ```
 import React, { Component } from 'react';
 import Pagination from 'react-bilibilistyle-pagination';
@@ -89,5 +91,5 @@ export default App;
 ![最完整](https://raw.githubusercontent.com/wiki/Juliiii/react-pagination/1.png)
 
 ## 注意事项
----
+--
 由于current和pageSize改变时，触发回调函数，会获取新的current或pageSize, 这个时候调用的组件要修改这两个变量，然后通过props传入这个组件中，才能正常显示。
