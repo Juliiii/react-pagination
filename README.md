@@ -93,3 +93,5 @@ export default App;
 ## 注意事项
 
 由于current和pageSize改变时，触发回调函数，会获取新的current或pageSize, 这个时候调用的组件要修改这两个变量，然后通过props传入这个组件中，才能正常显示。
+
+## PS：由于是当时看了一会儿react, 一时兴起写的...现在想起来，感觉有点不太对的地方.....有空再改吧
