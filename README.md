@@ -20,13 +20,14 @@ import 'react-bilibilistyle-pagination/dist/main.css';
 
 参数 | 说明 | 类型 | 必要性 |默认值
 ------------ | ------------ | ------------ | ------------ | ----------|
-current | 当前页数 | number | 必要 | 1 |
+defaultCurrent | 默认页数 | number | 必要 | 1 |
+defaultPageSize | 默认每页可以显示条数 | number | 不必要 | 10
 total | 数据总数 | number | 必要 | 100 |
 pageSize | 每页条数 | number | 不必要 | 10 |
 pageSizes | 指定每页可以显示多少条 | array(都是数字) | 不必要 | [10, 20, 30, 40] |
 showQuickJumper | 是否可以快速跳到某页 | bool | 不必要 | true |
 showSizeChanger | 是否可以指定每页显示多少条 | bool | 不必要 | true |
-pageChange | 页码改变的回调，参数为新的页数 | func | 必要 | - |
+pageChange | 页码改变的回调，参数为新的页数 | func | 不必要 | - |
 pageSizeChange | 每页页数改变时的回调，接收当前页数和新的每条页数作为参数 | func | 不必要 | - |
 
 ## Example
@@ -40,35 +41,29 @@ class App extends Component {
     constructor () {
         super();
         this.state = {
-            current: 2,
-            total: 100
+            defaultCurrent: 2
         }
     }
 
-    pageChange (current, newPageSize) {
-        this.setState({
-            current
-        });
+    pageChange  = (current, newPageSize) => {
+	  ...
     }
 
-    pageSizeChange (current, newPageSize) {
-        this.setState({
-            current,
-            pageSize: newPageSize
-        });
+    pageSizeChange = (current, newPageSize) => {
+      ...
     }
 
     render () {
         const props = {
             ...this.state,
-            pageChange: this.pageChange.bind(this),
-            pageSizeChange: this.pageSizeChange.bind(this)
+            pageChange: this.pageChange,
+            pageSizeChange: this.pageSizeChange
         }
 
 
         return (
-            <div className="xxx">
-                <Pagination {...props}/>
+            <div>
+                <Pagination {...props} />
             </div>
         );
     }
@@ -90,8 +85,3 @@ export default App;
 ###### 完整
 ![最完整](https://raw.githubusercontent.com/wiki/Juliiii/react-pagination/1.png)
 
-## 注意事项
-
-由于current和pageSize改变时，触发回调函数，会获取新的current或pageSize, 这个时候调用的组件要修改这两个变量，然后通过props传入这个组件中，才能正常显示。
-
-## PS：由于是当时看了一会儿react, 一时兴起写的...现在想起来，感觉有点不太对的地方.....有空再改吧
