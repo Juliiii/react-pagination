@@ -1,6 +1,6 @@
 {
   "name": "react-bilibilistyle-pagination",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Juli <zhulf0506@163.com>",
   "private": false,
   "main": "./dist/main.js",
