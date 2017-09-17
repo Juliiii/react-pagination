@@ -1,5 +1,5 @@
 ## Introduction
-
+[![Build Status](https://travis-ci.org/Juliiii/react-pagination.svg?branch=master)](https://travis-ci.org/Juliiii/react-pagination)
 
 经常混迹B站，大二上期末的时候做web2.0课程设计大作业时，需要用到分页组件。当时模仿B站的分页写了一个Angular的版本，最近在学习React, 故将其写成一个react组件。
 
