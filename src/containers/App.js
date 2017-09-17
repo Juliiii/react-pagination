@@ -14,7 +14,7 @@ class App extends Component {
         super();
         this.state = {
             defaultCurrent: 3,
-            total: 1515
+            total: 120
         }
     }
 

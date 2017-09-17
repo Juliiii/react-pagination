@@ -12,9 +12,11 @@ export default class Pagination extends Component {
         defaultpageSize: 10,
         pageSize:        -1,
         total:           100,
-        showQuickJumper: true,
-        showSizeChanger: true,
+        showQuickJumper: false,
+        showSizeChanger: false,
         pageSizes:       [10, 20, 30, 40],
+        pageChange (current, pageSize) { console.log(current, pageSize); },
+        pageSizeChange (current, pageSize) { console.log(current, pageSize); }
     }
 
     static propTypes   = {
@@ -93,6 +95,7 @@ export default class Pagination extends Component {
 
     changeUI = (current, length) => {
         // changeUI depend on the currentIndex and length
+        console.log(length);
         if (current <= 7) {
             if (length <= 9) {
                 this.setState({
@@ -111,7 +114,7 @@ export default class Pagination extends Component {
             this.setState({
                 pages: [1, '...', ...(new Array(5).fill(0).map((item, i) => current + i - 2)), '...', length]
             })            
-        }        
+        }
     }
 
 
