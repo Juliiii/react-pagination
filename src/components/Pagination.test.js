@@ -25,7 +25,7 @@ const setup = () => {
 
 describe('integrated test', () => {
   // test showQuickJumper
-  const { wrapper, props } = setup();
+  const { wrapper } = setup();
   it('if showQuickJumber true, it may contain skipInput', () => {
     // 这个时候是false, 应该没有
     expect(wrapper.find('SkipInput').exists()).toBe(false);
