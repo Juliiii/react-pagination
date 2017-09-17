@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const PageSizeSelect = (props) => {
+const PageSizeSelect = (props) => {
     return(
         <div>
             <select className="select" onChange={props.pageSizesChange}>

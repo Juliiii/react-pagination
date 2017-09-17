@@ -15,7 +15,6 @@ export default class Pagination extends Component {
         showQuickJumper: true,
         showSizeChanger: true,
         pageSizes:       [10, 20, 30, 40],
-        simple:          false
     }
 
     static propTypes   = {
@@ -27,7 +26,6 @@ export default class Pagination extends Component {
         pageSizes:       PropTypes.arrayOf(PropTypes.number),
         showQuickJumper: PropTypes.bool,
         showSizeChanger: PropTypes.bool,
-        simple:          PropTypes.bool
     }
 
     constructor (props) {
@@ -170,15 +168,12 @@ export default class Pagination extends Component {
     }
 
     onKeyDown = (keyCode, value, input) => {
-        if (keyCode === 13) {
-            input.value = '';
-            if (isNaN(value)) return;
-            let _value = Number(value);
-            let { pagesLength } = this.state;
-            const newIndex = _value > pagesLength ? pagesLength
-                                                  : _value < 1 ? 1 : _value;
-            this.onPageChange(newIndex, pagesLength);
-        }
+        if (isNaN(value)) return;
+        let _value = Number(value);
+        let { pagesLength } = this.state;
+        const newIndex = _value > pagesLength ? pagesLength
+                                                : _value < 1 ? 1 : _value;
+        this.onPageChange(newIndex, pagesLength);
     }
 
     onMouseLeave = (e) => {

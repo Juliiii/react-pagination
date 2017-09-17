@@ -5,7 +5,9 @@ class SkipInput extends Component {
     onKeyDown = ({keyCode, target: {value}}) => {
         const _keyCode = keyCode;
         const _value = value;
-        this.props.onKeyDown(_keyCode, _value, this.input);
+        if (_keyCode === 13) {
+            this.props.onKeyDown(_value);
+        }
     }
 
 
