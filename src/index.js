@@ -1,12 +1,12 @@
-//import React from 'react';
-//import ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import './css/index.css';
-import Pagination from './components/Pagination';
+import App from './containers/App';
 // import registerServiceWorker from './registerServiceWorker';
 
 
-export default Pagination;
+// export default Pagination;
 
-//ReactDOM.render(<Pagination />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
 // registerServiceWorker();
 

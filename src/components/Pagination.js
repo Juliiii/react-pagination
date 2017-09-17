@@ -8,47 +8,93 @@ import PageSizeSelect from './PageSizeSelect';
 
 export default class Pagination extends Component {
     static defaultProps = {
-        current:         1,
-        pageSize:        10,
+        defaultCurrent:   1,
+        defaultpageSize: 10,
+        pageSize:        -1,
         total:           100,
         showQuickJumper: true,
         showSizeChanger: true,
-        pageSizes:       [10, 20, 30, 40]
+        pageSizes:       [10, 20, 30, 40],
+        simple:          false
     }
 
     static propTypes   = {
-        pageChange:      PropTypes.func.isRequired,
+        pageChange:      PropTypes.func,
         pageSizeChange:  PropTypes.func,
-        current:         PropTypes.number.isRequired,
+        defaultCurrent:  PropTypes.number.isRequired,
         total:           PropTypes.number.isRequired,
         pageSize:        PropTypes.number,
         pageSizes:       PropTypes.arrayOf(PropTypes.number),
         showQuickJumper: PropTypes.bool,
-        showSizeChanger: PropTypes.bool
+        showSizeChanger: PropTypes.bool,
+        simple:          PropTypes.bool
     }
 
-    constructor () {
-        super();
+    constructor (props) {
+        super(props);
+        const pageSize = props.pageSize !== -1 ? props.pageSize : props.defaultpageSize;
         this.state = {
             hoverIndex: -1,
-            pagesLength: 0
-        }
+            pagesLength: Math.ceil(props.total / pageSize),
+            current: props.defaultCurrent,
+            total: props.total,
+            pageSize
+        };
     }
 
     componentWillMount () {
-        this._getPages(this.props);
+        const { current, pagesLength } = this.state;
+        this.changeUI(current, pagesLength);
     }
 
     componentWillReceiveProps (nextProps) {
-        this._getPages(nextProps);
+        const { current } = this.state;
+        const { total, pageSize, defaultCurrent, defaultpageSize } = this.props;
+        // if total has change
+        // else if pageSize has change
+        // else if no pageSize but defaultpageSize has change
+        // else defaultCurrent has change
+        let shouldUpdate = false;
+        let newTotal = total;
+        let newPageSize = pageSize;
+        let newCurrent = current;
+        if (nextProps.total !== total) {
+            newTotal = nextProps.total;
+            shouldUpdate = true;
+        }
+
+        if (defaultCurrent !== nextProps.defaultCurrent) {
+            newCurrent = nextProps.defaultCurrent;
+            shouldUpdate = true;
+        }
+
+        if (nextProps.pageSize !== -1) {
+            if (nextProps.pageSize !== pageSize) {
+                newPageSize = nextProps.pageSize;
+                shouldUpdate = true;
+            }
+        } else {
+            if (pageSize === -1 && nextProps.defaultpageSize !== defaultpageSize) {
+                newPageSize = nextProps.defaultpageSize;
+                shouldUpdate = true;
+            }
+        }
+
+        if (shouldUpdate) {
+            const newPagesLength = Math.ceil(newTotal / newPageSize);
+            this.setState({
+                current: newCurrent,
+                total: newTotal,
+                pageSize: newPageSize,
+                pagesLength: newPagesLength
+            });
+
+            this.changeUI(newCurrent, newPagesLength);
+        }
     }
 
-    _getPages (props) {
-        const { total, pageSize, current } = props;
-        const length = Math.ceil(total / pageSize);
-        this.setState({
-            pagesLength: length
-        });
+    changeUI = (current, length) => {
+        // changeUI depend on the currentIndex and length
         if (current <= 7) {
             if (length <= 9) {
                 this.setState({
@@ -67,104 +113,122 @@ export default class Pagination extends Component {
             this.setState({
                 pages: [1, '...', ...(new Array(5).fill(0).map((item, i) => current + i - 2)), '...', length]
             })            
-        }
+        }        
     }
 
-    onPageSizesChange ({target: {value}}) {
-         let { total, current } = this.props;
-         value = parseInt(value, 10);
+
+    onPageChange = (current, length) => {
+        // when currentPage change, we should call the props.func, give the caller
+        // two arg, one is currentPage, second is pageSize
+        const { pageChange } = this.props;
+        this.setState({
+            current
+        });
+        this.changeUI(current, length);
+        if (pageChange) pageChange(current, this.state.pageSize);
+    }
+
+    onPageSizesChange = ({target: {value}}) => {
+         let { total, current } = this.state;
+         const { pageSizeChange } = this.props;
+         value = Number(value);
          const length = Math.ceil(total / value);
          this.setState({
-             pagesLength: length
+             pagesLength: length,
+             pageSize: value
          });
          if (current > length) current = length;
-         this.props.pageSizeChange(current, value);
+         this.changeUI(current, length);
+         if (pageSizeChange) pageSizeChange(current, value);
     }
 
-    onClick (e) {
+    onClick = (e) => {
         const Text = e.target.innerText;
+        const { current, pagesLength } = this.state;
         switch (Text) {
             case '上一页':
-                this.props.pageChange(this.props.current - 1);
+                this.onPageChange(current - 1, pagesLength);
                 break;
             case '下一页':
-                this.props.pageChange(this.props.current + 1); 
+                this.onPageChange(current + 1, pagesLength); 
                 break;
             default:
-                this.props.pageChange(parseInt(Text, 10));
+                this.onPageChange(Number(Text), pagesLength);
                 break;
         }
 
     }
 
-    onMouseOver (e) {
+    onMouseOver = (e) => {
         let hoverIndex = e.target.innerText;
         if (hoverIndex !== '上一页' &&  hoverIndex !== '下一页') {
-            hoverIndex = parseInt(e.target.innerText, 10);
+            hoverIndex = Number(e.target.innerText);
         }
         this.setState({
-            hoverIndex: hoverIndex
+            hoverIndex
         });
     }
 
-    onKeyDown (keyCode, value, input) {
+    onKeyDown = (keyCode, value, input) => {
         if (keyCode === 13) {
             input.value = '';
             if (isNaN(value)) return;
-            let _value = parseInt(value, 10);
+            let _value = Number(value);
             let { pagesLength } = this.state;
             const newIndex = _value > pagesLength ? pagesLength
                                                   : _value < 1 ? 1 : _value;
-            this.props.pageChange(newIndex, this.props.pageSize);
+            this.onPageChange(newIndex, pagesLength);
         }
     }
 
-    onMouseLeave (e) {
+    onMouseLeave = (e) => {
         this.setState({
             hoverIndex: -1
         });
     }
 
     render () {
+        const { hoverIndex, current, pages, total, pagesLength } = this.state;
+        const { pageSizes, showQuickJumper, showSizeChanger } = this.props;
         const preClasses = cx({
             'list-items': true,
-            'list-items-1': this.state.hoverIndex === '上一页'
+            'list-items-1': hoverIndex === '上一页'
         });
         const nextClasses = cx({
             'list-items': true,
-            'list-items-1': this.state.hoverIndex === '下一页'
+            'list-items-1': hoverIndex === '下一页'
         });
 
         const pre = <li className={preClasses} 
-                    onMouseOver={this.onMouseOver.bind(this)}
-                    onMouseLeave={this.onMouseLeave.bind(this)}
-                    onClick={this.onClick.bind(this)}>上一页</li>;
+                    onMouseOver={this.onMouseOver}
+                    onMouseLeave={this.onMouseLeave}
+                    onClick={this.onClick}>上一页</li>;
         const next = <li className={nextClasses} 
-                    onMouseOver={this.onMouseOver.bind(this)}
-                    onMouseLeave={this.onMouseLeave.bind(this)}
-                    onClick={this.onClick.bind(this)}>下一页</li>;
+                    onMouseOver={this.onMouseOver}
+                    onMouseLeave={this.onMouseLeave}
+                    onClick={this.onClick}>下一页</li>;
 
         return (
             <div className="wrapper">
-                {this.props.showSizeChanger ? <PageSizeSelect 
-                                            pageSizes={this.props.pageSizes} 
-                                            pageSizesChange={this.onPageSizesChange.bind(this)}/>
+                {showSizeChanger ? <PageSizeSelect 
+                                            pageSizes={pageSizes} 
+                                            pageSizesChange={this.onPageSizesChange}/>
                                             : null}
                 <ul className="list">
-                    { this.props.current === 1 ? null : pre}
-                    { this.state.pages.map((page, index) => 
+                    { current === 1 ? null : pre}
+                    { pages.map((page, index) => 
                         <PaginationItems page={page} 
                                         key={index}
-                                        hoverIndex={this.state.hoverIndex}
-                                        currentIndex={this.props.current}
-                                        onClick={this.onClick.bind(this)} 
-                                        onMouseOver={this.onMouseOver.bind(this)}
-                                        onMouseLeave={this.onMouseLeave.bind(this)}/>) }
-                    { this.props.current === this.state.pagesLength ? null : next }
+                                        hoverIndex={hoverIndex}
+                                        currentIndex={current}
+                                        onClick={this.onClick} 
+                                        onMouseOver={this.onMouseOver}
+                                        onMouseLeave={this.onMouseLeave}/>) }
+                    { current === pagesLength ? null : next }
                 </ul>
-                {this.props.showQuickJumper ? <SkipInput pagesLength={this.state.pagesLength}
-                                                         total={this.props.total}
-                                                         onKeyDown={this.onKeyDown.bind(this)}/> 
+                {showQuickJumper ? <SkipInput pagesLength={pagesLength}
+                                                         total={total}
+                                                         onKeyDown={this.onKeyDown}/> 
                                             : null}
             </div>
         );

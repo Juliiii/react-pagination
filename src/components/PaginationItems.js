@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 export default class PaginationItems extends Component {
@@ -7,34 +6,19 @@ export default class PaginationItems extends Component {
         hoverIndex: -1
     }
 
-
-
-    /*static propTypes = {
-        page: PropTypes.oneOfType(
-            [PropTypes.number.isRequired, PropTypes.string.isRequired]
-        ),
-        hoverIndex: PropTypes.oneOfType(
-            [PropTypes.number.isRequired, PropTypes.string.isRequired]
-        ),
-        currentIndex: PropTypes.number.isRequired,
-        onClick: PropTypes.func.isRequired,
-        onMouseOver: PropTypes.func.isRequired,
-        onMouseLeave: PropTypes.func.isRequired
-    }*/
-
-    onClick (e) {
+    onClick = (e) => {
         if (this.props.page !== '...' && this.props.onClick) {
             this.props.onClick(e);
         }
     }
 
-    onMouseOver (e) {
+    onMouseOver = (e) => {
         if (this.props.onMouseOver) {
             this.props.onMouseOver(e);
         }
     }
 
-    onMouseLeave (e) {
+    onMouseLeave = (e) => {
         if (this.props.onMouseLeave) {
             this.props.onMouseLeave(e);
         }
@@ -49,9 +33,9 @@ export default class PaginationItems extends Component {
         });
         return (
             <li className= {classes} 
-                onClick={this.onClick.bind(this)} 
-                onMouseOver={this.onMouseOver.bind(this)}
-                onMouseLeave={this.onMouseLeave.bind(this)}>{page}</li>
+                onClick={this.onClick} 
+                onMouseOver={this.onMouseOver}
+                onMouseLeave={this.onMouseLeave}>{page}</li>
         );
     }
 };

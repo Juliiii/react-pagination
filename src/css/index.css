@@ -5,7 +5,18 @@ body {
 }
 
 .wrapper {
-  display: flex;
+  display: -webkit-flex;  /* 新版本语法: Chrome 21+ */
+  display: flex;          /* 新版本语法: Opera 12.1, Firefox 22+ */
+  display: -webkit-box;   /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+  display: -moz-box;      /* 老版本语法: Firefox (buggy) */
+  display: -ms-flexbox;   /* 混合版本语法: IE 10 */   
+  /* 09版 */
+  -webkit-box-align: center;
+  /* 12版 */
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  -o-align-items: center;
   align-items: center;
   min-width: 800px;
 }
