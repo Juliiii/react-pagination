@@ -95,7 +95,6 @@ export default class Pagination extends Component {
 
     changeUI = (current, length) => {
         // changeUI depend on the currentIndex and length
-        console.log(length);
         if (current <= 7) {
             if (length <= 9) {
                 this.setState({
