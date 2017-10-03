@@ -1,5 +1,7 @@
 ## Introduction
-[![Build Status](https://travis-ci.org/Juliiii/react-pagination.svg?branch=master)](https://travis-ci.org/Juliiii/react-pagination)
+> a component of react
+
+[![Build Status](https://travis-ci.org/Juliiii/react-pagination.svg?branch=master)](https://travis-ci.org/Juliiii/react-pagination) [![npm](https://img.shields.io/npm/dm//react-bilibilistyle-pagination.svg?style=plastic)](https://www.npmjs.com/package/react-bilibilistyle-pagination) [![npm](https://img.shields.io/npm/v/react-bilibilistyle-pagination.svg?style=plastic)](https://www.npmjs.com/package/react-bilibilistyle-pagination) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=plastic)](https://github.com/Juliiii/react-pagination/blob/master/LICENSE)
 
 经常混迹B站，大二上期末的时候做web2.0课程设计大作业时，需要用到分页组件。当时模仿B站的分页写了一个Angular的版本，最近在学习React, 故将其写成一个react组件。
 
@@ -85,3 +87,6 @@ export default App;
 ###### 完整
 ![最完整](https://raw.githubusercontent.com/wiki/Juliiii/react-pagination/1.png)
 
+
+## license
+MIT
